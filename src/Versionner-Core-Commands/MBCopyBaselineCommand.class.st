@@ -1,5 +1,5 @@
 "
-Command to copy a baseline in Versionner
+Command to copy a baseline in Versionner 
 "
 Class {
 	#name : #MBCopyBaselineCommand,
