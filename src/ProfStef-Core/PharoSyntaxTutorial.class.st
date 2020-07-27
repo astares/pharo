@@ -157,7 +157,7 @@ Blocks are anonymous methods that can be stored into variables and executed on d
 
 Blocks are delimited by square brackets: []"
 
-[GTPlayground open].
+[StPlayground open].
 
 "does not open a Browser because the block is not executed.
 
@@ -259,7 +259,7 @@ You can also Do it using the keyboard shortcut ''Ctrl + D''
 
 Try to evaluate these expressions:"
 
-GTPlayground open.
+StPlayground open.
 
 SmalltalkImage current aboutThisSystem.
 
