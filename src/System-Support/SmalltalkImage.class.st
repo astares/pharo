@@ -80,7 +80,9 @@ SmalltalkImage class >> current [
 { #category : #'instance creation' }
 SmalltalkImage class >> new [
 
-	self error: 'Use current'.
+	 ^(super new) 
+		specialObjectsArray: Smalltalk specialObjectsArray copy;
+		yourself
 ]
 
 { #category : #initialization }
