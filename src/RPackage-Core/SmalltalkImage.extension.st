@@ -3,5 +3,5 @@ Extension { #name : #SmalltalkImage }
 { #category : #'*RPackage-Core' }
 SmalltalkImage >> packages [
 
-	^ (RPackageOrganizer default packages) sorted
+	^ (self packageOrganizer packages) sorted
 ]

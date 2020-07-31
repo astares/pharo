@@ -109,6 +109,14 @@ SmalltalkImageTest >> testOpenLog [
 
 ]
 
+{ #category : #'tests-arguments' }
+SmalltalkImageTest >> testPackageOrganizer [
+
+	self assert: Smalltalk packageOrganizer notNil.
+	
+	self assert: Smalltalk packageOrganizer packages size equals: Smalltalk packages size
+]
+
 { #category : #helpers }
 SmalltalkImageTest >> writeToLogWithFileNamed: filename [
 	| oldLogFileName |

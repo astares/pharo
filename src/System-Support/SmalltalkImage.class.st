@@ -31,7 +31,8 @@ Class {
 	#instVars : [
 		'globals',
 		'specialObjectsArray',
-		'vm'
+		'vm',
+		'packageOrganizer'
 	],
 	#classVars : [
 		'CompilerClass',
@@ -1338,6 +1339,21 @@ SmalltalkImage >> options [
 SmalltalkImage >> organization [
 	"Return the organizer for the receiver"
 	^globals organization
+]
+
+{ #category : #accessing }
+SmalltalkImage >> packageOrganizer [
+	"Return an explicitly set package organizer or the default organizer (if installed)"
+	
+	^packageOrganizer ifNil: [ 
+		packageOrganizer := (self class environment at: #RPackageOrganizer ifAbsent: [ nil ]) 
+										ifNotNil: [:orgClass | orgClass default ] ]
+]
+
+{ #category : #accessing }
+SmalltalkImage >> packageOrganizer: aPackageOrganizer [
+
+	packageOrganizer := aPackageOrganizer 
 ]
 
 { #category : #'memory space' }
