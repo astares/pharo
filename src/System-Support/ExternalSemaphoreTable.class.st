@@ -24,11 +24,10 @@ Class {
 { #category : #accessing }
 ExternalSemaphoreTable class >> clearExternalObjects [
 	"Clear the array of objects that have been registered for use in non-Smalltalk code."
+
 	"Only lock additions, removals executing in parallel would have little effect on the resulting array"
 
-	ProtectAdd critical: [
-		self unprotectedExternalObjects: Array new].
-
+	ProtectAdd critical: [ self unprotectedExternalObjects: Array new ]
 ]
 
 { #category : #private }
@@ -58,7 +57,8 @@ ExternalSemaphoreTable class >> collectionBasedOn: externalObjects withRoomFor: 
 ExternalSemaphoreTable class >> externalObjects [
 	"Not really sure why this is protected, once called you are out of protection of the locks anyways, and any use of the object is dangerous...
 	Only additions can potentially change the actual array in use though, so only lock that."
-	^ProtectAdd critical: [self unprotectedExternalObjects].
+
+	^ProtectAdd critical: [self unprotectedExternalObjects]
 ]
 
 { #category : #private }
@@ -122,12 +122,13 @@ ExternalSemaphoreTable class >> privateUnregisterExternalObject: anObject [
 	1 to: objects size do: [:i |
 		(objects at: i) == anObject ifTrue: 
 		[objects at: i put: nil.
-		^self]].
+		^self]]
 
 ]
 
 { #category : #accessing }
 ExternalSemaphoreTable class >> registerExternalObject: anObject [
+
 	^ ProtectAdd critical: [self privateRegisterExternalObject: anObject]
 
 ]
@@ -152,16 +153,19 @@ ExternalSemaphoreTable class >> slotFor: anObject in: aCollection [
 
 { #category : #private }
 ExternalSemaphoreTable class >> unprotectedExternalObjects [
+
 	^Smalltalk specialObjectsArray at: 39
 ]
 
 { #category : #private }
 ExternalSemaphoreTable class >> unprotectedExternalObjects: aCollection [
+
 	^Smalltalk specialObjectsArray at: 39 put: aCollection
 ]
 
 { #category : #accessing }
 ExternalSemaphoreTable class >> unregisterExternalObject: anObject [
+
 	ProtectRemove critical: [self privateUnregisterExternalObject: anObject]
 
 ]

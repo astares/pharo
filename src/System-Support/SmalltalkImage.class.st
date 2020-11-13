@@ -56,31 +56,39 @@ SmalltalkImage class >> cleanUp [
 { #category : #settings }
 SmalltalkImage class >> compilerClass [
 
-	^CompilerClass ifNil: [ 
-		"use OpalCompiler as the fallback compiler if installed"
-		self class environment at: #OpalCompiler ifAbsent: [ nil ] ]
+	^ CompilerClass ifNil: [ self defaultCompiler ]
 ]
 
 { #category : #settings }
 SmalltalkImage class >> compilerClass: aClass [
+
 	CompilerClass := aClass
 ]
 
 { #category : #'instance creation' }
 SmalltalkImage class >> current [
+	"Return the global representing the current image"
+	
 	^Smalltalk
+]
+
+{ #category : #defaults }
+SmalltalkImage class >> defaultCompiler [
+	"Use OpalCompiler as the fallback compiler if installed. Return nil otherwise"
+	
+	^self class environment at: #OpalCompiler ifAbsent: [ nil ]
 ]
 
 { #category : #'instance creation' }
 SmalltalkImage class >> new [
 
-	self error: 'Use current'.
+	self error: 'Use current'
 ]
 
 { #category : #initialization }
 SmalltalkImage class >> shutDown: isImageClosing [
 
-	isImageClosing ifTrue: [ SourceFiles close ].
+	isImageClosing ifTrue: [ SourceFiles close ]
 ]
 
 { #category : #initialization }
@@ -91,6 +99,7 @@ SmalltalkImage class >> startUp: isImageStarting [
 
 { #category : #image }
 SmalltalkImage class >> wordSize [
+
 	^ Smalltalk vm wordSize
 ]
 
@@ -117,6 +126,7 @@ SmalltalkImage >> allClasses [
 	"Return all the class defines in the SmalltalkImage"
 	"Smalltalk allClasses"
 	"May be we could discard this one in the future"
+	
 	^ globals allClasses
 ]
 
@@ -129,6 +139,7 @@ SmalltalkImage >> allClassesAndTraits [
 
 { #category : #'class and trait names' }
 SmalltalkImage >> allClassesAndTraitsDo: aBlock [
+
 	^globals allClassesAndTraitsDo: aBlock
 ]
 
@@ -150,7 +161,7 @@ SmalltalkImage >> allTraits [
 SmalltalkImage >> argumentAt: i [
 	"Answer the i-th argument of the command line, or nil if not so many argument."
 	
-	^self vm getSystemAttribute: 2 + i
+	^ self vm getSystemAttribute: 2 + i
 ]
 
 { #category : #'system attribute' }
@@ -259,7 +270,7 @@ SmalltalkImage >> backupImageInFileNamed: aFileReference [
 				closeSourceFiles;
 				openSourceFiles ]].
 		
-	^ isNewSession.
+	^ isNewSession
 ]
 
 { #category : #saving }
@@ -297,6 +308,7 @@ SmalltalkImage >> bytesLeft [
 SmalltalkImage >> bytesLeft: aBool [
 	"Return the amount of available space. If aBool is true, include possibly available swap space. If aBool is false, include possibly available physical memory. For a report on the largest free block currently availabe within Pharo memory but not counting extra memory use #primBytesLeft."
 	<primitive: 112>
+
 	^self primBytesLeft
 ]
 
@@ -322,11 +334,13 @@ SmalltalkImage >> changesSuffix [
 
 { #category : #'class and trait names' }
 SmalltalkImage >> classNamed: className [
+
 	^ globals classOrTraitNamed: className
 ]
 
 { #category : #'class and trait names' }
 SmalltalkImage >> classNames [
+
 	^globals classNames
 ]
 
@@ -338,14 +352,15 @@ SmalltalkImage >> classOrTraitNamed: aString [
 ]
 
 { #category : #housekeeping }
-SmalltalkImage >> cleanOutUndeclared [ 
+SmalltalkImage >> cleanOutUndeclared [
+
 	Undeclared removeUnreferencedKeys
 ]
 
 { #category : #cleanup }
 SmalltalkImage >> cleanUp [	
-	"Smalltalk cleanUp"
 	"Gently clean up"
+	<script: 'Smalltalk cleanUp'>
 	
 	^self cleanUp: false
 ]
@@ -403,7 +418,7 @@ Are you sure you want to proceed?') ifFalse: [^self]].
 	"Run the cleanup code"
 	classes 
 		do:[:aClass| aClass cleanUp: aggressive]
-		displayingProgress: [:aClass| 'Cleaning up in ', aClass name].
+		displayingProgress: [:aClass| 'Cleaning up in ', aClass name]
 ]
 
 { #category : #'special objects' }
@@ -465,9 +480,9 @@ SmalltalkImage >> compilerClass: aClass [
 { #category : #'memory space' }
 SmalltalkImage >> createStackOverflow [
 	"For testing the low space handler..."
-	"Smalltalk installLowSpaceWatcher; createStackOverflow"
+	<script: 'Smalltalk installLowSpaceWatcher; createStackOverflow'>
 
-	self createStackOverflow.  "infinite recursion"
+	self createStackOverflow  "infinite recursion"
 ]
 
 { #category : #'sources, change log' }
@@ -497,10 +512,10 @@ SmalltalkImage >> exit: exitStatus [
 	Essential. See Object documentation whatIsAPrimitive.
 	
 	Possible values for exitStatus:
-	0:   success
+	  0: success
 	> 1: error"
-
 	<primitive: 113>
+	
 	self primitiveFailed
 ]
 
@@ -508,6 +523,7 @@ SmalltalkImage >> exit: exitStatus [
 SmalltalkImage >> exitFailure [
 	"Quit the VM with a failing signal.
 	Will lose all current changes."
+	
 	self exit: 1
 ]
 
@@ -515,6 +531,7 @@ SmalltalkImage >> exitFailure [
 SmalltalkImage >> exitSuccess [
 	"Quit the VM with a success signal.
 	Will lose all current changes."
+	
 	self exit: 0
 ]
 
@@ -522,8 +539,8 @@ SmalltalkImage >> exitSuccess [
 SmalltalkImage >> exitToDebugger [
 	"Primitive. Enter the machine language debugger, if one exists. Essential.
 	See Object documentation whatIsAPrimitive."
-
 	<primitive: 114>
+	
 	self primitiveFailed
 ]
 
@@ -616,6 +633,7 @@ SmalltalkImage >> fileForImageNamed: aString [
 
 { #category : #housekeeping }
 SmalltalkImage >> fixObsoleteBindings [
+
 	CompiledMethod allInstances do: [ :method |
 		| obsoleteBindings |
 		
@@ -674,10 +692,10 @@ SmalltalkImage >> fixObsoleteSharedPools [
 
 { #category : #'to clean later' }
 SmalltalkImage >> flushClassNameCache [
-	"Smalltalk flushClassNameCache"
 	"Force recomputation of the cached list of class names."
-
-	globals flushClassNameCache.
+	<script: 'Smalltalk flushClassNameCache'>
+	
+	globals flushClassNameCache
 ]
 
 { #category : #'image, changes name' }
@@ -695,6 +713,8 @@ SmalltalkImage >> fullNameForImageNamed: aString [
 { #category : #'memory space' }
 SmalltalkImage >> garbageCollect [
 	"Primitive. Reclaims all garbage and answers the number of bytes of available space."
+	<script: 'Smalltalk garbageCollect'>
+	
 	Object flushDependents.
 	^self primitiveGarbageCollect
 ]
@@ -702,6 +722,7 @@ SmalltalkImage >> garbageCollect [
 { #category : #'memory space' }
 SmalltalkImage >> garbageCollectMost [
 	"Primitive. Reclaims recently created garbage (which is usually most of it) fairly quickly and answers the number of bytes of available space."
+	<script: 'Smalltalk garbageCollectMost'>
 
 	<primitive: 131>
 	^ self primBytesLeft
@@ -727,6 +748,7 @@ SmalltalkImage >> getFileNameFromUser [
 { #category : #accessing }
 SmalltalkImage >> globals [
 	"Answer the global SystemDictionary"
+	
 	^globals
 ]
 
@@ -743,6 +765,7 @@ SmalltalkImage >> growMemoryByAtLeast: numBytes [
 	"Grow memory by at least the requested number of bytes.
 	 Primitive.  Essential. Fail if no memory is available."
 	<primitive: 180>
+	
 	(numBytes isInteger and: [numBytes > 0]) ifTrue:
 		[OutOfMemory signal].
 	^self primitiveFailed
@@ -765,7 +788,7 @@ SmalltalkImage >> hasCompiler [
 SmalltalkImage >> image [
 	"Answer the object to query about the current object memory and execution environment."
 	
-	^self
+	^ self
 ]
 
 { #category : #'image, changes name' }
@@ -888,17 +911,20 @@ SmalltalkImage >> isInteractiveGraphic [
 
 { #category : #printing }
 SmalltalkImage >> isSelfEvaluating [
+
 	self == Smalltalk ifTrue: [^true].
 	^super isSelfEvaluating
 ]
 
 { #category : #accessing }
 SmalltalkImage >> lastImagePath [
+
 	^ LastImagePath
 ]
 
 { #category : #'sources, change log' }
 SmalltalkImage >> lastQuitLogPosition [
+
 	^ LastQuitLogPosition
 ]
 
@@ -911,7 +937,7 @@ SmalltalkImage >> lastQuitLogPosition: aNumber [
 
 { #category : #'sources, change log' }
 SmalltalkImage >> lastUpdateString [
-	"SmalltalkImage current lastUpdateString"
+	<script: 'SmalltalkImage current lastUpdateString inspect'>
 	
 	^'Build information: ', SystemVersion current asString
 
@@ -919,6 +945,8 @@ SmalltalkImage >> lastUpdateString [
 
 { #category : #'sources, change log' }
 SmalltalkImage >> licenseString [
+	<script: 'SmalltalkImage current licenseString inspect'>
+	
 	^ self licenseStringTemplate format: (Array with: Date today year asString)
 ]
 
@@ -1002,21 +1030,16 @@ For further information, contact: fonts at gnome dot org.'
 
 { #category : #miscellaneous }
 SmalltalkImage >> logDuring: aMonadicBlock [
-	" for safe use, if stream is a file, it needs to be closed after use " 
-	| logStream |	
+	"For safe use, if stream is a file, it needs to be closed after use"
 
-	[
-		logStream := self openLog.
-		aMonadicBlock value: logStream.
-	] ensure: [ self closeLog: logStream ].
-
-
+	| logStream |
+	[ logStream := self openLog.
+	  aMonadicBlock value: logStream ] ensure: [ self closeLog: logStream ]
 ]
 
 { #category : #miscellaneous }
 SmalltalkImage >> logError: errMsg inContext: aContext [
-
-	" we should think about integrating a toothpick here someday"
+	
 	self logStdErrorDuring: [ :stderr|
 		"install the line end conversion and force initialize the converter"
 		stderr
@@ -1063,7 +1086,7 @@ SmalltalkImage >> logStdErrorDuring: aBlock [
 		aBlock value: stderr.
 		"reset the coloring"
 		stderr nextPut: Character escape; nextPutAll: '[0m'.
-	] on: Error do: [ :e| "we don't care if the logging to stdout fails..." ].
+	] on: Error do: [ :e| "we don't care if the logging to stdout fails..." ]
 ]
 
 { #category : #miscellaneous }
@@ -1076,7 +1099,7 @@ SmalltalkImage >> logStdOutDuring: aBlock [
 	[aBlock value: stderr.] 
 		on: Error do: [ "If the block fails we don't do nothing. This can lead to recursive errors" ].
 
-	stderr flush.
+	stderr flush
 ]
 
 { #category : #'memory space' }
@@ -1134,6 +1157,7 @@ SmalltalkImage >> maxFilenameLength [
 SmalltalkImage >> maxIdentityHash [
 	"Answer the maximum identityHash value supported by the VM."
 	<primitive: 176>
+	
 	^self primitiveFailed
 ]
 
@@ -1141,13 +1165,14 @@ SmalltalkImage >> maxIdentityHash [
 SmalltalkImage >> memoryHogs [
 	"Answer the list of objects to notify with #freeSomeSpace if memory gets full."
 
-	^ MemoryHogs ifNil: [MemoryHogs := OrderedCollection new]
+	^ MemoryHogs ifNil: [ MemoryHogs := OrderedCollection new ]
 ]
 
 { #category : #miscellaneous }
 SmalltalkImage >> metacelloPlatformAttributes [
-    "Returns the tags for the conditional platform loading in Metacello. Pay attention the order is important: from most  to least general." 
+    "Returns the tags for the conditional platform loading in Metacello. Pay attention the order is important: from most to least general." 
     "For release integrators, we should not have #'pharo1.3x' **and** #'pharo1.4.x'"
+
    ^ #(#squeakCommon #pharo #'pharo9.x' #'pharo9.0.x')
 ]
 
@@ -1281,7 +1306,7 @@ Do you want to proceed?'
 
 ]
 
-{ #category : #miscellaneous }
+{ #category : #private }
 SmalltalkImage >> openLog [
 	"This is a _private_ method,
 	Because it really belongs to logging facility,

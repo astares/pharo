@@ -33,16 +33,18 @@ Class {
 
 { #category : #'instance creation' }
 SystemDictionary class >> withOrganizer: anOrganizer [
+
 	| dictionary |
 	dictionary := self new.
 	dictionary organization: anOrganizer. "update too the back pointer"
-	^dictionary.
+	^dictionary
 	
 ]
 
 { #category : #'classes and traits' }
 SystemDictionary >> allBehaviors [
 	"Return all the classes and traits defined in the Smalltalk SystemDictionary"
+	
 	^cachedBehaviors ifNil: [cachedBehaviors := self allClassesAndTraits flatCollect: [:each | {each . each classSide} ]]
 ]
 
@@ -57,21 +59,21 @@ SystemDictionary >> allBehaviorsDo: aBlock [
 SystemDictionary >> allClasses [  
 	"Return all the class defines in the Smalltalk SystemDictionary"
 
-	^ self classNames collect: [:name | self at: name]
+	^ self classNames collect: [:name | self at: name ]
 ]
 
 { #category : #'classes and traits' }
 SystemDictionary >> allClassesAndTraits [
 	"Return all the classes and traits defined in the Smalltalk SystemDictionary"
 
-	^ self classAndTraitNames collect: [:each | self at: each]
+	^ self classAndTraitNames collect: [:each | self at: each ]
 ]
 
 { #category : #'classes and traits' }
 SystemDictionary >> allClassesAndTraitsDo: aBlock [
 	"Evaluate the argument, aBlock, for each class and trait in the system."
 	
-	^self classAndTraitNames do: [:each | aBlock value: (self at: each)]
+	^self classAndTraitNames do: [:each | aBlock value: (self at: each) ]
 	
 	
 
@@ -81,11 +83,12 @@ SystemDictionary >> allClassesAndTraitsDo: aBlock [
 SystemDictionary >> allClassesDo: aBlock [
 	"Evaluate the argument, aBlock, for each class in the system."
 
-	^self classNames do: [:name | aBlock value: (self at: name)]
+	^self classNames do: [:name | aBlock value: (self at: name) ]
 ]
 
 { #category : #'classes and traits' }
 SystemDictionary >> allMethods [
+
 	^ self allBehaviors flatCollect: [ :behavior | behavior methods ]
 ]
 
@@ -93,14 +96,14 @@ SystemDictionary >> allMethods [
 SystemDictionary >> allTraits [
 	"Return all traits defined in the Smalltalk SystemDictionary"
 
-	^ self traitNames collect: [:each | self at: each]
+	^ self traitNames collect: [ :each | self at: each ]
 ]
 
 { #category : #'classes and traits' }
 SystemDictionary >> allTraitsDo: aBlock [
 	"Evaluate the argument, aBlock, for each trait in the system."
 
-	^self traitNames do: [:name | aBlock value: (self at: name)]
+	^ self traitNames do: [ :name | aBlock value: (self at: name) ]
 ]
 
 { #category : #'dictionary access' }
@@ -127,15 +130,15 @@ SystemDictionary >> classAndTraitNames [
 	"Answer a sorted collection of all class and trait (not including class-traits) names. 
 	Now traits are normal classes. So they are in same class list.
 	Do not bother to sort"
-
 	
 	^self classNames
 	
 ]
 
 { #category : #'classes and traits' }
-SystemDictionary >> classNamed: className [ 
-	^self classOrTraitNamed: className.
+SystemDictionary >> classNamed: className [
+
+	^self classOrTraitNamed: className
 ]
 
 { #category : #'class and trait names' }
@@ -206,9 +209,8 @@ SystemDictionary >> fillCaches [
 		For bootstrapping we need to have a different Class when executing value isKindOf: Class :
 		In such expression Class represents a kind of fixed point: the class of the class of the system. 
 		When bootstrapping we want the class Class of the current kernel defined in the current namespace.
-		Since the current namespace should contains the class that describes itself as well as a new Class class.
-		we are done :)."
-	
+		Since the current namespace should contains the class that describes itself as well as a new Class class
+		we are done."	
 	
 	"The cached names are sorted to allow for a very efficient hasBindingThatBeginsWith: check"	
 	cachedClassNames := classNames sort.
@@ -236,7 +238,6 @@ SystemDictionary >> forgetClass: aClass logged: aBool [
 
 { #category : #testing }
 SystemDictionary >> hasBindingThatBeginsWith: aString [
-
 	"Use the cached class and non-class names for better performance."
 
 	| name searchBlock |
@@ -281,6 +282,7 @@ SystemDictionary >> hasClassOrTraitNamed: aString [
 { #category : #'dictionary access' }
 SystemDictionary >> lookupVar: name [
 	"Return a var with this name.  Return nil if none found"
+	
 	name isString ifFalse: [ ^nil ].
 	^self reservedVariables at: name ifAbsent: [self bindingOf: name]
 ]
@@ -289,6 +291,7 @@ SystemDictionary >> lookupVar: name [
 SystemDictionary >> maxIdentityHash [
 	"Answer the maximum identityHash value supported by the VM."
 	<primitive: 176>
+	
 	^self primitiveFailed
 ]
 
@@ -345,6 +348,7 @@ SystemDictionary >> poolUsers [
 
 { #category : #printing }
 SystemDictionary >> printElementsOn: aStream [
+
 	aStream nextPutAll:'(lots of globals)'
 ]
 
@@ -366,6 +370,7 @@ SystemDictionary >> removeFromCaches: aKey [
 
 { #category : #'dictionary access' }
 SystemDictionary >> removeKey: key ifAbsent: aBlock [
+
 	self removeFromCaches: key.
 	^ super removeKey: key ifAbsent: aBlock
 ]
@@ -400,7 +405,7 @@ SystemDictionary >> renameClass: aClass from: oldName to: newName [
 	self flushClassNameCache.
 	SystemAnnouncer uniqueInstance classRenamed: aClass from: oldName to: newName inCategory: category.
 	aClass subclassesDo:[:subclass |
-		SystemAnnouncer uniqueInstance classParentOf: subclass renamedFrom: oldName to: newName].
+		SystemAnnouncer uniqueInstance classParentOf: subclass renamedFrom: oldName to: newName]
 ]
 
 { #category : #renaming }
@@ -417,6 +422,7 @@ SystemDictionary >> renameClassNamed: oldName as: newName [
 
 { #category : #removing }
 SystemDictionary >> reservedVariables [
+
 	^vars ifNil: [ vars := ReservedVariable lookupDictionary]
 ]
 

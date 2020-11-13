@@ -21,3 +21,8 @@ ManifestSystemSupport class >> manuallyResolvedDependencies [
 ManifestSystemSupport class >> ruleClassNameInSelectorRuleV1FalsePositive [
 	^ #(#(#(#RGMethodDefinition #(#'Author class' #useAuthor:during: #true)) #'2020-06-15T21:10:09.714675+02:00') )
 ]
+
+{ #category : #'code-critics' }
+ManifestSystemSupport class >> ruleUnconditionalRecursionRuleV1FalsePositive [
+	^ #(#(#(#RGMethodDefinition #(#SmalltalkImage #createStackOverflow #false)) #'2020-11-13T13:27:28.823394+01:00') )
+]

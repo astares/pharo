@@ -19,6 +19,7 @@ SystemNavigation class >> default [
 
 { #category : #query }
 SystemNavigation >> allBehaviors [
+
 	^ self environment allBehaviors
 ]
 
@@ -64,6 +65,7 @@ SystemNavigation >> allClassesDo: aBlock [
 { #category : #query }
 SystemNavigation >> allClassesImplementing: aSelector [  
 	"Answer all classes that implement the message aSelector."
+	
 	^self allBehaviors select: [:class | class includesSelector: aSelector]
 ]
 
@@ -123,8 +125,8 @@ SystemNavigation >> allMethodsSelect: aBlock [
 { #category : #query }
 SystemNavigation >> allObjects [
 	"Answer an Array of all objects in the system.  Fail if there isn't enough memory to instantiate the result."
-	
 	<primitive: 178>
+	
 	^ self primitiveFailed
 ]
 
@@ -182,7 +184,8 @@ SystemNavigation >> allReferencesToBinding: aVariablesBinding [
 ]
 
 { #category : #'message sends' }
-SystemNavigation >> allSendersOf: selector [ 
+SystemNavigation >> allSendersOf: selector [
+
 	^self allReferencesTo: selector
 ]
 
@@ -240,6 +243,7 @@ SystemNavigation >> allUnsentMessagesIn: selectorSet [
 
 { #category : #accessing }
 SystemNavigation >> environment [
+
 	^ environment 
 ]
 
@@ -291,6 +295,7 @@ SystemNavigation >> instanceSideMethodsWithNilKeyInLastLiteral [
 
 { #category : #'message sends' }
 SystemNavigation >> isUnsentMessage: selector [
+
 	^ self allBehaviors
 		noneSatisfy: [ :behavior | behavior thoroughHasSelectorReferringTo: selector ]
 ]

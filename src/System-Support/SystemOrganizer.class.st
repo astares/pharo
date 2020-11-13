@@ -31,7 +31,7 @@ SystemOrganizer >> addCategory: newCategory [
 
 	super addCategory: newCategory.
 
-	SystemAnnouncer uniqueInstance classCategoryAdded: newCategory.
+	SystemAnnouncer uniqueInstance classCategoryAdded: newCategory
 ]
 
 { #category : #queries }
@@ -39,22 +39,25 @@ SystemOrganizer >> categoriesMatching: matchString [
 	"Return all matching categories"
 	
 	self categories ifNil: [ ^#() ].
-	^ self categories select: [:c | matchString match: c]
+	^ self categories select: [:c | matchString match: c ]
 ]
 
 { #category : #queries }
 SystemOrganizer >> classesInCategory: category [
+
 	^ (self listAtCategoryNamed: category) collect: [ :className | self environment at: className ] 
 ]
 
 { #category : #accessing }
 SystemOrganizer >> environment [
+
 	 ^ environment ifNil: [ environment := Smalltalk globals]
 ]
 
 { #category : #accessing }
 SystemOrganizer >> environment: aSystemDictionary [
-	 environment := aSystemDictionary.
+
+	 environment := aSystemDictionary
 
 ]
 
@@ -92,8 +95,9 @@ SystemOrganizer >> orderedTraitsIn: category [
 { #category : #removing }
 SystemOrganizer >> removeCategoriesMatching: matchString [
 	"Remove all matching categories with their classes"
-	(self categoriesMatching: matchString) do:
-		[:c | self removeSystemCategory: c]
+
+	(self categoriesMatching: matchString) do: [ :c | 
+		self removeSystemCategory: c ]
 ]
 
 { #category : #accessing }
@@ -116,7 +120,7 @@ SystemOrganizer >> removeSystemCategory: category [
 	 (self orderedTraitsIn: category) , (self superclassOrder: category)
 		reverseDo: [:each | each removeFromSystem].
 
-	self removeCategory: category.
+	self removeCategory: category
 
 ]
 

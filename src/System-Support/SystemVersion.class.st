@@ -127,7 +127,6 @@ SystemVersion >> commitHash [
 
 { #category : #'accessing - properties' }
 SystemVersion >> commitHash: aString [
-
 	"Set the hash of a Git commit from which the image was bootstrapped"
 
 	commitHash := aString
@@ -154,7 +153,7 @@ SystemVersion >> date: newDate [
 SystemVersion >> datedVersion [
 	" E.g. 'Pharo2.0a of ''18 April 2012''' "
 
-	^ self version asString , ' of ' , self date printString.
+	^ self version asString , ' of ' , self date printString
 ]
 
 { #category : #accessing }
@@ -166,7 +165,7 @@ SystemVersion >> dottedMajorMinor [
 { #category : #accessing }
 SystemVersion >> dottedMajorMinorPatch [
 	
-	^ self majorMinorPatch: '.'.
+	^ self majorMinorPatch: '.'
 ]
 
 { #category : #testing }
@@ -185,7 +184,8 @@ SystemVersion >> hasValidBuildNumber [
 
 { #category : #compatibility }
 SystemVersion >> highestUpdate [
-	 ^highestUpdate ifNil: [ highestUpdate := self calculateHighestUpdate ].
+
+	 ^highestUpdate ifNil: [ highestUpdate := self calculateHighestUpdate ]
 
 	
 
@@ -193,6 +193,7 @@ SystemVersion >> highestUpdate [
 
 { #category : #compatibility }
 SystemVersion >> highestUpdate: anInteger [
+
 	highestUpdate := anInteger
 ]
 
@@ -227,7 +228,7 @@ SystemVersion >> initialize [
 	suffix := ''.
 	build := self class invalidBuildNumber.
 	commitHash := ''.
-	date := Date today.
+	date := Date today
 ]
 
 { #category : #'accessing - properties' }
@@ -294,16 +295,19 @@ SystemVersion >> minor: anInteger [
 
 { #category : #accessing }
 SystemVersion >> patch [
+
 	^ patch
 ]
 
 { #category : #accessing }
 SystemVersion >> patch: anObject [
+
 	patch := anObject
 ]
 
 { #category : #printing }
 SystemVersion >> printOn: stream [
+
 	stream nextPutAll: self imageVersionString
 ]
 

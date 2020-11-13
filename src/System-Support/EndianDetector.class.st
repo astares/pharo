@@ -23,27 +23,29 @@ Class {
 
 { #category : #endian }
 EndianDetector class >> calcEndianness [
-	"store the least significant word of the float with 1; on big endian machines this is the second word"
+	"Store the least significant word of the float with 1; on big endian machines this is the second word"
+
 	| f |
 	f := Float new: 2.
 	f at: 2 put: 1.
 	self adoptInstance: f.
-	^ (f at: 1) = 1 ifTrue: [#little] ifFalse: [#big]
+	^ (f at: 1) = 1
+		  ifTrue: [ #little ]
+		  ifFalse: [ #big ]
 ]
 
 { #category : #endian }
 EndianDetector class >> endianness [
 
 	EndianCache ifNil: [EndianCache := self calcEndianness].
-	^ EndianCache.
+	^ EndianCache
 
 ]
 
 { #category : #'class initialization' }
 EndianDetector class >> initialize [
 
-	SessionManager default
-		registerSystemClassNamed: self name
+	SessionManager default registerSystemClassNamed: self name
 ]
 
 { #category : #testing }
@@ -60,8 +62,8 @@ EndianDetector class >> isLittleEndian [
 
 { #category : #'system startup' }
 EndianDetector class >> startUp: isImageStarting [
-
-	"only handle when lauching a new image"
+	"Only handle when lauching a new image"
+	
 	isImageStarting ifFalse: [ ^ self ].
-	EndianCache := nil.
+	EndianCache := nil
 ]

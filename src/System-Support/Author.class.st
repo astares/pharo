@@ -16,6 +16,7 @@ Class {
 { #category : #settings }
 Author class >> authorSettingOn: aBuilder [
 	<systemsettings>
+	
 	(aBuilder setting: #authorFullName)
 		order: -100000;
 		parent: #pharoSystem;
@@ -33,6 +34,7 @@ Author class >> authorSettingOn: aBuilder [
 { #category : #utilities }
 Author class >> changeStamp [ 
 	"Answer a string to be pasted into source code to mark who changed it and when."
+	
 	^ self fullName , ' ' , Date today mmddyyyy, ' ',
 		((String streamContents: [:s | Time now print24: true on: s]) copyFrom: 1 to: 5)
 ]
@@ -48,6 +50,7 @@ Author class >> changeStampPerSe [
 
 { #category : #utilities }
 Author class >> fixStamp: changeStamp [ 
+
 	| parts |
 	parts := changeStamp findTokens: ' '.
 	(parts notEmpty and: [parts last first isLetter]) ifTrue:
@@ -60,80 +63,88 @@ Author class >> fixStamp: changeStamp [
 
 { #category : #convenience }
 Author class >> fullName [
+
 	^ self uniqueInstance fullName
 ]
 
 { #category : #convenience }
-Author class >> fullName: aString [ 
+Author class >> fullName: aString [
+
 	^ self uniqueInstance checkAndSetFullNameWith: aString
 ]
 
 { #category : #convenience }
 Author class >> fullNamePerSe [
+
 	^ self uniqueInstance fullNamePerSe 
 ]
 
 { #category : #'instance creation' }
 Author class >> new [
+
 	self error: 'Author is a singleton -- send uniqueInstance instead'
 ]
 
 { #category : #convenience }
 Author class >> requestFullName [
+
 	^ self uniqueInstance requestFullName
 ]
 
 { #category : #initialization }
 Author class >> reset [
 	<script>
+	
 	^ self uniqueInstance reset
 ]
 
 { #category : #'instance creation' }
 Author class >> uniqueInstance [
+
 	^ uniqueInstance ifNil: [ uniqueInstance := super new ]
 ]
 
-{ #category : #'testing-support' }
+{ #category : #utilities }
 Author class >> useAuthor: aString during: aBlock [
+
 	^ self uniqueInstance useAuthor: aString during: aBlock
 ]
 
 { #category : #accessing }
-Author >> checkAndSetFullNameWith: aString [ 
-	
-	fullName := 
-	aString select: [ :character |
-		character charCode < 128 and: [ character isAlphaNumeric ]
-	].
-	
-	(fullName = aString and: [ fullName isNotEmpty ]) ifFalse: [ self requestFullName ]
-	
-	
-	
+Author >> checkAndSetFullNameWith: aString [
+
+	fullName := aString select: [ :character | 
+		            character charCode < 128 and: [ 
+			            character isAlphaNumeric ] ].
+
+	(fullName = aString and: [ fullName isNotEmpty ]) ifFalse: [ 
+		self requestFullName ]
 ]
 
 { #category : #accessing }
 Author >> fullName [
+
 	"Answer the full name to be used to identify the current code author."
 
-	[fullName isEmptyOrNil] whileTrue: [
+	[ fullName isEmptyOrNil ] whileTrue: [ 
 		self requestFullName.
-		(fullName isEmptyOrNil or:[ fullName = 'FirstnameLastname' ]) 
-				ifTrue: [fullName := nil. ^'Anonymous']
-	].
+		(fullName isEmptyOrNil or: [ fullName = 'FirstnameLastname' ]) 
+			ifTrue: [ 
+				fullName := nil.
+				^ 'Anonymous' ] ].
 	^ fullName
 ]
 
 { #category : #accessing }
 Author >> fullName: aString [
-	fullName := aString.	
 
+	fullName := aString
 ]
 
 { #category : #accessing }
 Author >> fullNamePerSe [
 	"Answer the currently-prevailing author full name, such as it is, empty or not"
+
 	^ fullName
 ]
 
@@ -153,7 +164,7 @@ Author >> initialize [
 	fullName := ''
 ]
 
-{ #category : #'ui-requests' }
+{ #category : #'ui - requests' }
 Author >> requestFullName [
 	| initialAnswer |
 	
@@ -171,7 +182,7 @@ Author >> reset [
 	fullName := ''
 ]
 
-{ #category : #'testing-support' }
+{ #category : #utilities }
 Author >> useAuthor: aString during: aBlock [
 	| previous |
 	previous := fullName.
