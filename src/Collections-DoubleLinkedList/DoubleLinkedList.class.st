@@ -169,6 +169,12 @@ DoubleLinkedList >> isEmpty [
 	^ head isNil and: [ tail isNil ]
 ]
 
+{ #category : #private }
+DoubleLinkedList >> isNotEmpty [ 
+
+ ^self isEmpty not
+]
+
 { #category : #accessing }
 DoubleLinkedList >> last [
 	"Return the last element that I hold, also known as my tail value.

@@ -14,6 +14,14 @@ ReMethodSourceCleaner class >> ableToClean: aCompiledMethod [
 ]
 
 { #category : #'private - initialization' }
+ReMethodSourceCleaner class >> clean: aString [
+
+	^(self forSource: aString)
+		clean;
+		contents
+]
+
+{ #category : #'private - initialization' }
 ReMethodSourceCleaner class >> forSource: aString [
 
 	^ self new
