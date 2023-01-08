@@ -47,7 +47,7 @@ CoverageCollectorTest >> methodNotCalled [
 
 	"Not expected to be called"
 
-	self methodCallee.
+	self methodCallee
 ]
 
 { #category : #example }
@@ -61,7 +61,7 @@ CoverageCollectorTest >> methodTwoPaths: aBoolean [
 
 	aBoolean ifTrue: [ 1 ].
 	aBoolean ifTrue: [ ^2 ] ifFalse: [ 3 ].
-	^4.
+	^4
 ]
 
 { #category : #tests }
@@ -91,7 +91,7 @@ CoverageCollectorTest >> testExample [
 
 	| collector coverage |
 	collector := CoverageCollector new. "Instantiate"
-	collector methods: Point methods, Rectangle methods.  "Configure with the methods to watch."	
+	collector methods: Point methods, Rectangle methods.  "Configure with the methods to watch."
 	coverage := collector runOn: [ (1@1 corner: 2@2) center ].  "Setup, execute and teardown."
 	self assert: (coverage methods includes: Point>>#x).  "Inspect the results"
 	self assert: (coverage nodes size > 10). "Covered paths are also available"
@@ -105,7 +105,7 @@ CoverageCollectorTest >> testNoCoverage [
 	cov methods add: Rectangle>>#closeTo:.
 	res := cov runOn: [ (1@1 corner: 2@2) area ].
 	self assert: res methods size equals: 0.
-	self assert: res percentage equals: 0.
+	self assert: res percentage equals: 0
 ]
 
 { #category : #tests }
@@ -125,7 +125,7 @@ CoverageCollectorTest >> testNodeCoverage [
 	self assert: (cov nodes includesAll: res nodes).
 	self assert: res percentage asInteger equals: 50.
 	self assert: res uncoveredNodes size equals: 2.
-	
+
 	res := cov runOn: [ self methodTwoPaths: true. self methodTwoPaths: true. ].
 	self assert: (cov nodes includesAll: res nodes).
 	self assert: res methods size equals: 1.
@@ -138,8 +138,7 @@ CoverageCollectorTest >> testNodeCoverage [
 	self assert: res methods size equals: 1.
 	self assert: res nodes size equals: 4.
 	self assert: res percentage asInteger equals: 100.
-	self assert: res uncoveredNodes size equals: 0.
-
+	self assert: res uncoveredNodes size equals: 0
 ]
 
 { #category : #tests }
@@ -157,7 +156,7 @@ CoverageCollectorTest >> testNodeCoverage2 [
 	self assert: res methods size equals: 6.
 	self assert: res nodes size equals: 15.
 	self assert: (cov nodes includesAll: res nodes).
-	self assert: res uncoveredNodes size equals: 6.
+	self assert: res uncoveredNodes size equals: 6
 ]
 
 { #category : #tests }
@@ -167,10 +166,10 @@ CoverageCollectorTest >> testNodeDistancesFrom [
 	cov := CoverageCollector new.
 	cov methods: (self class methods select: [ :m | 'method*' match: m selector ]).
 	graph := cov callgraph.
-		
+
 	target := (self class >> #methodManyBlocks) ast body.
 	distances := cov nodeDistancesFrom: target.
-	self assert: (distances values sorted) equals: { 0. 1. 1. 1. 1. 1. 2. 2. 2. 2. 2. 2. 2}.
+	self assert: (distances values sorted) equals: { 0. 1. 1. 1. 1. 1. 2. 2. 2. 2. 2. 2. 2}
 ]
 
 { #category : #tests }
@@ -180,10 +179,10 @@ CoverageCollectorTest >> testNodeDistancesTo [
 	cov := CoverageCollector new.
 	cov methods: (self class methods select: [ :m | 'method*' match: m selector ]).
 	graph := cov callgraph.
-		
+
 	target := (self class >> #methodCallee) ast body.
 	distances := cov nodeDistancesTo: target.
-	self assert: (distances values sorted) equals: { 0. 1. 1. 1. 2. 3}.
+	self assert: (distances values sorted) equals: { 0. 1. 1. 1. 2. 3}
 ]
 
 { #category : #tests }
@@ -193,5 +192,5 @@ CoverageCollectorTest >> testNothingToCover [
 	cov := CoverageCollector new.
 	res := cov runOn: [ (1@1 corner: 2@2) area ].
 	self assert: res methods size equals: 0.
-	self assert: res percentage isNaN.
+	self assert: res percentage isNaN
 ]

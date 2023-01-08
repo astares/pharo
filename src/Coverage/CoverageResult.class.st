@@ -43,13 +43,13 @@ CoverageResult >> crown [
 
 	crown := Dictionary new.
 
-	methods do: [ :m | 
-		m sendNodes do: [ :n | 
+	methods do: [ :m |
+		m sendNodes do: [ :n |
 			| selector |
 			selector := n selector.
-			(uncoveredSelectors includes: selector) ifTrue: [ 
+			(uncoveredSelectors includes: selector) ifTrue: [
 				| c |
-				c := crown at: selector ifAbsentPut: [ 
+				c := crown at: selector ifAbsentPut: [
 					     | nc |
 					     nc := Crown new.
 					     nc selector: selector.
@@ -107,7 +107,6 @@ CoverageResult >> printOn: aStream [
 		nextPutAll: ' (';
 		print: ((100.0 * nodes size / collector nodes size) rounded) ;
 		nextPutAll: '%)'
-
 ]
 
 { #category : #computation }

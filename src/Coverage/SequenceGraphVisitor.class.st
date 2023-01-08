@@ -41,7 +41,7 @@ SequenceGraphVisitor >> edges: anObject [
 { #category : #initialization }
 SequenceGraphVisitor >> initialize [
 
-	edges := OrderedCollection new.
+	edges := OrderedCollection new
 ]
 
 { #category : #visiting }
@@ -57,8 +57,7 @@ SequenceGraphVisitor >> visitMessageNode: aMessageNode [
 			| target |
 			target := m ast body.
 			self assert: target isSequence.
-			edges add: { currentNode. target }. ].
-
+			edges add: { currentNode. target }. ]
 ]
 
 { #category : #visiting }
@@ -68,10 +67,8 @@ SequenceGraphVisitor >> visitSequenceNode: aSequenceNode [
 	currentNode ifNotNil: [
 		edges add: { currentNode. aSequenceNode }.
 		^ self ].
-	
+
 	currentNode := aSequenceNode.
 	super visitSequenceNode: aSequenceNode.
-	currentNode := nil.
-
-
+	currentNode := nil
 ]

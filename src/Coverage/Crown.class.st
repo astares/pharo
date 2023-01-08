@@ -43,8 +43,7 @@ Crown >> printOn: aStream [
 		print: callers size.
 	aStream
 		nextPutAll: ' callees: ';
-		print: callees size.
-
+		print: callees size
 ]
 
 { #category : #accessing }

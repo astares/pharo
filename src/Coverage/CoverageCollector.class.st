@@ -50,8 +50,8 @@ CoverageCollector class >> uninstalAll [
 	"If for some reason metalinks are not removed, force a full image cleaning"
 
 	<script>
-	MetaLink allInstancesDo: [ :each | 
-		(each selector == #tagExecuted and: [ each metaObject == #node ]) 
+	MetaLink allInstancesDo: [ :each |
+		(each selector == #tagExecuted and: [ each metaObject == #node ])
 			ifTrue: [ each uninstall ] ]
 ]
 
@@ -65,7 +65,7 @@ CoverageCollector >> basicCollectResult [
 	res collector: self.
 	res methods: (methods select: [ :m | m ast hasBeenExecuted ]).
 	res nodes: IdentitySet new.
-	nodes do: [ :node | 
+	nodes do: [ :node |
 			node hasBeenExecuted ifTrue: [ res nodes add: node ] ].
 
 	^ res
@@ -83,7 +83,7 @@ CoverageCollector >> basicRun: aBlock [
 CoverageCollector >> callgraph [
 
 	"Compute and return directed `edges` that connect nodes together.
-	
+
 	 The vertices of this static call graph are the sequence nodes (the main sequence of each methods + nested syntactic blocks) and the edges are direct block nesting and message sends:
 	 * a sequence is connected to each of its (directly) nested sequences;
 	 * a sequence with a message send is connected to the main sequence of all methods with the same selector.
@@ -96,12 +96,12 @@ CoverageCollector >> callgraph [
 	| visitor |
 	visitor := SequenceGraphVisitor new.
 	visitor collector: self.
-	
+
 	nodes ifNil: [ self initializeNodes ].
 
 	nodes do: [ :node | node acceptVisitor: visitor ].
 
-	^ edges := visitor edges.
+	^ edges := visitor edges
 ]
 
 { #category : #basic }
@@ -128,8 +128,7 @@ CoverageCollector >> initialize [
 	metalink := MetaLink new
 		            selector: #tagExecuted;
 		            metaObject: #node.
-	methods := IdentitySet new.
-
+	methods := IdentitySet new
 ]
 
 { #category : #initialization }
@@ -138,29 +137,29 @@ CoverageCollector >> initializeNodes [
 	"Visit methods and collect their sequence nodes"
 
 	nodes := IdentitySet new.
-	methods do: [ :meth | 
-		meth ast nodesDo: [ :node | 
-			node isSequence ifTrue: [ 
+	methods do: [ :meth |
+		meth ast nodesDo: [ :node |
+			node isSequence ifTrue: [
 				nodes add: node ] ] ].
-	^ nodes.
+	^ nodes
 ]
 
 { #category : #basic }
 CoverageCollector >> install [
 
 	"Prepare the metalink. This can be slow.
-	
+
 	Sequence nodes are also prepared. This enable a basic path coverage."
 
-	methods do: [ :meth | 
+	methods do: [ :meth |
 		meth ast link: metalink.
 	].
 
 	nodes ifNil: [ self initializeNodes ].
-	nodes do: [ :node | 
+	nodes do: [ :node |
 		self assert: node isSequence.
 		node link: metalink.
-	].
+	]
 ]
 
 { #category : #running }
@@ -169,7 +168,7 @@ CoverageCollector >> installOn: aBlock [
 	"just run a block, with installation and uninstallation."
 
 	self install.
-	aBlock ensure: [ self uninstall ].
+	aBlock ensure: [ self uninstall ]
 ]
 
 { #category : #accessing }
@@ -197,11 +196,11 @@ CoverageCollector >> nodeDistances: aNodeOrMethod isBackward: isBackward [
 	 Edges can be followed forward or backward."
 
 	| aNode todo result todoLater depth |
-	
+
 	aNode := (aNodeOrMethod isCompiledMethod or: [aNodeOrMethod class = ReflectiveMethod])
 		ifTrue: [ aNodeOrMethod ast body ]
 		ifFalse: [ aNodeOrMethod ].
-	
+
 	self assert: (nodes includes: aNode).
 	result := IdentityDictionary new.
 	todo := OrderedCollection new.
@@ -218,11 +217,11 @@ CoverageCollector >> nodeDistances: aNodeOrMethod isBackward: isBackward [
 					ifTrue: [
 						n1 := e second.
 						n2 := e first. ]
-					ifFalse: [ 
+					ifFalse: [
 						n1 := e first.
 						n2 := e second. ].
-					
-				((n1 ~~ n) or: [result includesKey: n2]) ifFalse: [ 
+
+				((n1 ~~ n) or: [result includesKey: n2]) ifFalse: [
 					todoLater add: n2.
 					result at: n2 put: depth.
 				 ]
@@ -234,7 +233,7 @@ CoverageCollector >> nodeDistances: aNodeOrMethod isBackward: isBackward [
 		todoLater := tmp.
 		todoLater removeAll.
 	].
-	^ result.
+	^ result
 ]
 
 { #category : #callgraph }
@@ -288,14 +287,14 @@ CoverageCollector >> reset [
 	You should call if before you measure something."
 
 	methods do: [ :meth | meth ast removeProperty: #tagExecuted ifAbsent: [ ] ].
-	nodes do: [ :each | each removeProperty: #tagExecuted ifAbsent: [ ] ].
+	nodes do: [ :each | each removeProperty: #tagExecuted ifAbsent: [ ] ]
 ]
 
 { #category : #running }
 CoverageCollector >> runOn: aBlock [
 
 	"Fully run self, with installation, execution and uninstallation.
-	
+
 	Returns a CoverageResult."
 
 	self installOn: [
@@ -308,7 +307,7 @@ CoverageCollector >> runOn: aBlock [
 CoverageCollector >> uninstall [
 
 	"Remove the instrumentation.
-	
+
 	Use `runOn:` or `installOn:` that automatically ensures that `uninstall` is called."
 
 	metalink uninstall
