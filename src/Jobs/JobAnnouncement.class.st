@@ -13,20 +13,20 @@ Class {
 }
 
 { #category : #'instance creation' }
-JobAnnouncement class >> on: aJob [ 
+JobAnnouncement class >> on: aJob [
 
 	^ self new job: aJob
 ]
 
 { #category : #accessing }
 JobAnnouncement >> job [
-	
+
 	^ job
 ]
 
 { #category : #accessing }
 JobAnnouncement >> job: anObject [
-	
+
 	job := anObject
 ]
 

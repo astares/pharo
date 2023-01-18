@@ -2,14 +2,14 @@ Extension { #name : #Collection }
 
 { #category : #'*Jobs' }
 Collection >> do: aBlock displayingProgress: aStringOrBlock [
-	"Enumerate aBlock displaying progress information. 
- 	 If the argument is a string, use a static label for the process. 
+	"Enumerate aBlock displaying progress information.
+ 	 If the argument is a string, use a static label for the process.
 	 If the argument is a block, evaluate it with the element to retrieve the label.
-	
-		Smalltalk allClasses 
+
+		Smalltalk allClasses
 			do:[:aClass| (Delay forMilliseconds: 1) wait]
 			displayingProgress: 'Processing...'.
-		Smalltalk allClasses 
+		Smalltalk allClasses
 			do:[:aClass| (Delay forMilliseconds: 1) wait]
 			displayingProgress:[:aClass| 'Processing ', aClass name].
 	"
@@ -42,10 +42,10 @@ Collection >> do: aBlock displayingProgress: aStringOrBlock every: msecs [
 
 		self do: [ :each | | newLabel |
 			"Special handling for first and last element"
-			(count = 0 or: [ count + 1 = size or: [(Time millisecondsSince: lastUpdate) >= msecs]]) 
-				ifTrue: [ 
+			(count = 0 or: [ count + 1 = size or: [(Time millisecondsSince: lastUpdate) >= msecs]])
+				ifTrue: [
 					bar current: count.
-					oldLabel = (newLabel := (labelBlock cull: each) ifNil: [oldLabel]) 
+					oldLabel = (newLabel := (labelBlock cull: each) ifNil: [oldLabel])
 						ifFalse: [
 							bar label: newLabel.
 							oldLabel := newLabel ].

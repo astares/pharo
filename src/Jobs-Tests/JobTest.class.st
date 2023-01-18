@@ -10,7 +10,7 @@ Class {
 { #category : #running }
 JobTest >> tearDown [
 
-	testingEnvironment at: #SystemProgressMorph ifPresent: [:spm | 
+	testingEnvironment at: #SystemProgressMorph ifPresent: [:spm |
 		spm uniqueInstance bars do: [ :e | e close ]].
 	super tearDown
 ]
@@ -20,8 +20,8 @@ JobTest >> testChildJob [
 	| wasRun |
 	wasRun := false.
 
-	[ :job | 
-	[ :job2 | 
+	[ :job |
+	[ :job2 |
 	self assert: job children size equals: 1.
 	self assert: job children first equals: job2.
 	wasRun := true ] asJob run.
@@ -33,8 +33,8 @@ JobTest >> testChildJob [
 
 { #category : #tests }
 JobTest >> testCurrentJob [
-	[ :job | 
-	[ :job2 | 
+	[ :job |
+	[ :job2 |
 	self assert: Job current identicalTo: job2.
 	self deny: Job current identicalTo: job ] asJob run.
 
@@ -61,8 +61,8 @@ JobTest >> testJobAnnouncements [
 
 { #category : #tests }
 JobTest >> testLookupJob [
-	[ :job | 
-	[ :job2 | 
+	[ :job |
+	[ :job2 |
 	| noneFound result |
 	noneFound := false.
 	result := job2 lookup: [ :aJob | aJob == job2 ] ifNone: [ noneFound := true ].
@@ -85,9 +85,9 @@ JobTest >> testLookupJob [
 
 { #category : #tests }
 JobTest >> testOwner [
-	[ :job | 
+	[ :job |
 	self assert: job owner identicalTo: self.
-	[ :job2 | 
+	[ :job2 |
 	self assert: job owner identicalTo: self.
 	self assert: job2 owner identicalTo: self ] asJob run ] asJob run
 ]
@@ -119,7 +119,7 @@ JobTest >> testProgressChangeByCurrentValue [
 JobTest >> testSingleJob [
 	| wasRun |
 	wasRun := false.
-	[ :job | 
+	[ :job |
 	self assertEmpty: job children.
 	wasRun := true ] asJob run.
 	self assert: wasRun
