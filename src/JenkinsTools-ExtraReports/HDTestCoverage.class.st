@@ -54,7 +54,7 @@ HDTestCoverage >> initializeOn: aMethodReference [
 HDTestCoverage >> install [
 	reference methodClass methodDict
 		at: reference selector
-		put: self.
+		put: self
 ]
 
 { #category : #private }
@@ -82,5 +82,5 @@ HDTestCoverage >> run: aSelector with: anArray in: aReceiver [
 HDTestCoverage >> uninstall [
 	reference methodClass methodDict
 		at: reference selector
-		put: method.
+		put: method
 ]

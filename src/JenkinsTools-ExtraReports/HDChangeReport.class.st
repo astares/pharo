@@ -30,8 +30,8 @@ HDChangeReport >> changesFor: aResolvedVersion [
 	| references patch |
 	references := gofer allResolved
 		select: [ :each | each packageName = aResolvedVersion packageName ].
-	patch := MCPatch 
-		fromBase: (references size > 1 
+	patch := MCPatch
+		fromBase: (references size > 1
 			ifTrue: [ (references at: references size - 1) version snapshot ]
 			ifFalse: [ MCSnapshot empty ])
 		target: aResolvedVersion version snapshot.
@@ -100,7 +100,7 @@ HDChangeReport >> resolved [
 
 { #category : #running }
 HDChangeReport >> run [
-	
+
 	'changelog.xml' asFileReference ensureDelete writeStreamDo: [ :stream|
 		self generateOn: stream ]
 ]

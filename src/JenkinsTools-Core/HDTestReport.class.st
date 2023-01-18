@@ -42,7 +42,7 @@ HDTestReport class >> runClasses: aCollectionOfClasses named: aString [
 			asSortedCollection: [ :a :b | a name <= b name ].
 	classes isEmpty
 		ifTrue: [ ^ nil ].
-		
+
 	classes
 		do: [ :each | suite addTests: each buildSuite tests ].
 	^ self runSuite: suite
@@ -95,17 +95,17 @@ HDTestReport >> generateTestName: aTestCase [
 ]
 
 { #category : #testing }
-HDTestReport >> hasErrors [ 
+HDTestReport >> hasErrors [
 	^ suiteErrors ~= 0
 ]
 
 { #category : #testing }
-HDTestReport >> hasFailures [ 
+HDTestReport >> hasFailures [
 	^ suiteFailures ~= 0
 ]
 
 { #category : #testing }
-HDTestReport >> hasFailuresOrErrors [ 
+HDTestReport >> hasFailuresOrErrors [
 	^ self hasFailures or: [ self hasErrors ]
 ]
 
@@ -118,8 +118,7 @@ HDTestReport >> initialize [
 	suitePosition := suiteFailures := suiteErrors := 0.
 	progressFileName := 'progress.log'.
 	stageName := self class currentStageName.
-	nodeName := self calculateNodeName.
-	
+	nodeName := self calculateNodeName
 ]
 
 { #category : #initialization }
@@ -138,8 +137,8 @@ HDTestReport >> newLogDuring: aBlock [
 ]
 
 { #category : #initialization }
-HDTestReport >> openProgressStream [ 
-	
+HDTestReport >> openProgressStream [
+
 	| aFile |
 	aFile := File named: progressFileName.
 	aFile delete.
@@ -159,23 +158,23 @@ HDTestReport >> progressFileName: anObject [
 ]
 
 { #category : #running }
-HDTestReport >> recordError: anError duringTest: aTestCase [ 
+HDTestReport >> recordError: anError duringTest: aTestCase [
 
 	aTestCase shouldPass ifFalse: [ ^self ].
 	suiteErrors := suiteErrors + 1.
-				
+
 	self writeError: anError of: aTestCase.
-	self serializeError: anError of: aTestCase.
+	self serializeError: anError of: aTestCase
 ]
 
 { #category : #running }
-HDTestReport >> recordFailure: aTestFailure duringTest: aTestCase [ 
+HDTestReport >> recordFailure: aTestFailure duringTest: aTestCase [
 
 	aTestCase shouldPass ifFalse: [ ^self ].
-	suiteFailures := suiteFailures + 1.	
-			
+	suiteFailures := suiteFailures + 1.
+
 	self writeFailure: aTestFailure of: aTestCase.
-	self serializeError: aTestFailure of: aTestCase.
+	self serializeError: aTestFailure of: aTestCase
 ]
 
 { #category : #running }
@@ -189,9 +188,9 @@ HDTestReport >> recordSkip: aTestSkip duringTest: aTestCase [
 { #category : #running }
 HDTestReport >> recordUnexpectedPassOf: aTestCase [
 	suiteFailures := suiteFailures + 1.
-	
-	self 
-		writeException: (TestFailure new messageText: 'Unexpected pass (test is marked as expected failure)') 
+
+	self
+		writeException: (TestFailure new messageText: 'Unexpected pass (test is marked as expected failure)')
 		asNode: 'failure'
 		using: [  ]
 ]
@@ -209,7 +208,7 @@ HDTestReport >> reportTestCase: aTestCase runBlock: aBlock [
 	"The test element must be written after test completion to include a time information about run.
 	Therefore we can't report any error during test directly into the main xml stream.
 	Otherwise any new xml element would be written out of the test node.
-	To allow reporting during test we set a temp log stream 
+	To allow reporting during test we set a temp log stream
 	which we append to the main stream at the end of test as part of test element"
 	testLog := self newLogDuring: [ time := aBlock timeToRun ].
 	stream
@@ -232,7 +231,7 @@ HDTestReport >> reportTestCase: aTestCase runBlock: aBlock [
 HDTestReport >> run [
 	Author uniqueInstance
 		ifUnknownAuthorUse: 'hudson'
-		during: [ [ 
+		during: [ [
 			self setUp.
 			suiteTime := [ self runAll ]
 				timeToRun ]
@@ -241,7 +240,7 @@ HDTestReport >> run [
 
 { #category : #running }
 HDTestReport >> runAll [
-	CurrentExecutionEnvironment runTestsBy: [ 
+	CurrentExecutionEnvironment runTestsBy: [
 		suite tests do: [ :each | each run: self ]
 	]
 ]
@@ -250,12 +249,12 @@ HDTestReport >> runAll [
 HDTestReport >> runCase: aTestCase [
 	self
 		reportTestCase: aTestCase
-		runBlock: [ 
+		runBlock: [
 			[aTestCase runCaseManaged.
-			aTestCase shouldPass 
+			aTestCase shouldPass
 				ifTrue: [ self recordPassOf: aTestCase ]
 				ifFalse: [ self recordUnexpectedPassOf: aTestCase ]
-			] on: Exception do: [ :exc | 
+			] on: Exception do: [ :exc |
 					exc recordResultOf: aTestCase inHDTestReport: self ]
 		]
 ]
@@ -274,23 +273,23 @@ HDTestReport >> serializeError: error of: aTestCase [
 	"We got an error from a test, let's serialize it so we can properly debug it later on..."
 
 	| fuelFileName |
-	
+
 	self shouldSerializeError ifFalse: [ ^ self ].
-	
+
 	self class environment
 		at: #FLDebuggerStackSerializer
-		ifPresent: [ :fuelOutStackDebugAction | 
+		ifPresent: [ :fuelOutStackDebugAction |
 			| context testCaseMethodContext |
 			context := error signalerContext.
-			testCaseMethodContext := context findMethodContextSuchThat: [ :ctx | 
-				                         ctx receiver == aTestCase and: [ 
+			testCaseMethodContext := context findMethodContextSuchThat: [ :ctx |
+				                         ctx receiver == aTestCase and: [
 					                         ctx selector == #performTest ] ].
 			context := context copyTo: testCaseMethodContext.
 
 			fuelFileName := self suiteFileNameWithoutExtension , ('-' , aTestCase class name asString , '-',  aTestCase selector asString , '.fuel').
 
-			[ fuelOutStackDebugAction 
-					serializeStackFromContext: context sender 
+			[ fuelOutStackDebugAction
+					serializeStackFromContext: context sender
 					toFileNamed: fuelFileName ]
 				on: Error
 				do: [ :err | Stdio stderr << err messageText; crlf; flush ] ]
@@ -308,8 +307,8 @@ HDTestReport >> setUp [
 	aFile delete.
 	stream := ZnCharacterWriteStream
 			on: (aFile writeStream setToEnd; yourself)
-			encoding: 'utf8'.	
-		
+			encoding: 'utf8'.
+
 	stream nextPutAll: '<?xml version="1.0" encoding="UTF-8"?>'; lf.
 	stream
 		nextPutAll: '<testsuite ';
@@ -317,11 +316,11 @@ HDTestReport >> setUp [
 		nextPutAll: 'tests="'; print: suite tests size; nextPutAll: '" ';
 		nextPutAll: 'timestamp="'; print: Time now; nextPutAll: '" ';
 		nextPutAll: '>'.
-	
+
 	"Now this is ugly. We want to update the time and the number of failures and errors, but still at the same time stream a valid XML. So remember this position and add some whitespace, that we can fill later."
 	suitePosition := stream wrappedStream position - 1.
 	stream nextPutAll: (String new: 100 withAll: $ ); lf.
-	
+
 	"Initialize the test resources."
 	suite resources do: [ :each |
 		each isAvailable
@@ -335,7 +334,7 @@ HDTestReport >> shouldSerializeError [
 
 { #category : #accessing }
 HDTestReport >> shouldSerializeError: aBoolean [
-	shouldSerializeError := aBoolean.
+	shouldSerializeError := aBoolean
 ]
 
 { #category : #private }
@@ -375,35 +374,35 @@ HDTestReport >> suiteFileNameWithoutExtension [
 ]
 
 { #category : #accessing }
-HDTestReport >> suitePassing [ 
+HDTestReport >> suitePassing [
 	^ self suiteTotal - self suiteFailures - self suiteErrors
 ]
 
 { #category : #accessing }
 HDTestReport >> suiteTotal [
-	^ suite 
+	^ suite
 		ifNotNil: [ suite tests size ]
 		ifNil: [ 0 ]
 ]
 
 { #category : #running }
 HDTestReport >> tearDown [
-	suite resources 
+	suite resources
 		do: [ :each | each reset ].
-		
+
 	stream tab; nextPutAll: '<system-out><![CDATA[]]></system-out>'; lf.
 	stream tab; nextPutAll: '<system-err><![CDATA[]]></system-err>'; lf.
 	stream nextPutAll: '</testsuite>'.
-	
+
 	stream wrappedStream position: suitePosition.
-	stream 
-		nextPutAll: ' failures="'; print: suiteFailures; 
-		nextPutAll: '" errors="'; print: suiteErrors; 
-		nextPutAll: '" time="'; print: suiteTime asMilliSeconds / 1000.0; 
+	stream
+		nextPutAll: ' failures="'; print: suiteFailures;
+		nextPutAll: '" errors="'; print: suiteErrors;
+		nextPutAll: '" time="'; print: suiteTime asMilliSeconds / 1000.0;
 		nextPutAll: '">'.
 	stream close.
-	
-	progressStream 
+
+	progressStream
 		nextPutAll: 'finished running suite: ';
 		nextPutAll: suite name;
 		close
@@ -426,7 +425,7 @@ HDTestReport >> writeException: anException asNode: errorNodeName using: writeBl
 		nextPutAll: encodedErrorName;
 		nextPutAll: '" message="'; 	nextPutAll: encodedErrorDescription; nextPutAll: '">';
 		lf; nextPutAll: encodedErrorName;	lf.
-	encodedErrorDescription ifNotEmpty: [ 
+	encodedErrorDescription ifNotEmpty: [
 		stream nextPutAll: encodedErrorDescription;
 		lf ].
 	writeBlock value.
@@ -436,9 +435,9 @@ HDTestReport >> writeException: anException asNode: errorNodeName using: writeBl
 { #category : #private }
 HDTestReport >> writeException: anException of: aTestCase asNode: errorNodeName [
 
-	self  
-		writeException: anException 
-		asNode: errorNodeName 
+	self
+		writeException: anException
+		asNode: errorNodeName
 		using: [ 	self writeExceptionStack: anException of: aTestCase ]
 ]
 
@@ -448,7 +447,7 @@ HDTestReport >> writeExceptionStack: anException of: aTestCase [
 	context := anException signalerContext.
 	[ context isNil or: [ context receiver == aTestCase and: [ context selector == #runCase ]]]
 		whileFalse: [
-			[ stream nextPutAll: (self encode: context printString); lf ] 
+			[ stream nextPutAll: (self encode: context printString); lf ]
 				onErrorDo: [ stream nextPutAll: 'PRINTING ERROR'; lf].
 			context := context sender ]
 ]

@@ -34,15 +34,15 @@ HDReport class >> runPackages: aCollectionOfStrings [
 
 { #category : #private }
 HDReport >> convert: aString [
-	^ (aString asString 
+	^ (aString asString
 		copyReplaceAll: (String with: Character cr with: Character lf) with: (String with: Character lf))
 		copyReplaceAll: (String with: Character cr) with: (String with: Character lf)
 ]
 
 { #category : #private }
 HDReport >> encode: aString [
-	^ ((aString asString 
-		copyReplaceAll: '&' with: '&amp;') 
-		copyReplaceAll: '"' with: '&quot;') 
+	^ ((aString asString
+		copyReplaceAll: '&' with: '&amp;')
+		copyReplaceAll: '"' with: '&quot;')
 		copyReplaceAll: '<' with: '&lt;'
 ]

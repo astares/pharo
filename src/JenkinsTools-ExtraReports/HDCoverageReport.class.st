@@ -47,7 +47,7 @@ HDCoverageReport >> generateDataOn: aStream [
 		on: aStream.
 	self
 		generateType: 'method' indent: 3
-		total: (items := (packages flatCollect: [ :each | each methods ]) asSet) size 
+		total: (items := (packages flatCollect: [ :each | each methods ]) asSet) size
 		actual: (covered count: [ :each | items includes: each ])
 		on: aStream.
 	packages do: [ :each | self generatePackage: each on: aStream ].
@@ -79,13 +79,13 @@ HDCoverageReport >> generatePackage: aPackage class: aClass on: aStream [
 		total: (items := aPackage definedMethodsForClass: aClass) size
 		actual: (covered count: [ :each | items includes: each ])
 		on: aStream.
-	items do: [ :each | self generatePackage: each method: each on: aStream ].	
+	items do: [ :each | self generatePackage: each method: each on: aStream ].
 	aStream tab: 4; nextPutAll: '</class>'; nextPut: Character lf
 ]
 
 { #category : #generating }
 HDCoverageReport >> generatePackage: aPackage method: aReference on: aStream [
- 
+
 	aStream tab: 5; nextPutAll: '<method name="'; nextPutAll: (self encode: aReference selector); nextPutAll: '">'; nextPut: Character lf.
 	self
 		generateType: 'method' indent: 6
@@ -110,7 +110,7 @@ HDCoverageReport >> generatePackage: aPackage on: aStream [
 		total: (items := aPackage methods asSet) size
 		actual: (covered count: [ :each | items includes: each ])
 		on: aStream.
-	aPackage classes 
+	aPackage classes
 		do: [ :class | self generatePackage: aPackage class: class on: aStream ].
 	aStream tab: 3; nextPutAll: '</package>'; nextPut: Character lf
 ]
@@ -121,15 +121,15 @@ HDCoverageReport >> generateStatsOn: aStream [
 	aStream tab; tab; nextPutAll: '<packages value="'; print: (packages size); nextPutAll: '"/>'; nextPut: Character lf.
 	aStream tab; tab; nextPutAll: '<classes value="'; print: (packages sum: [ :each | each classes size ]); nextPutAll: '"/>'; nextPut: Character lf.
 	aStream tab; tab; nextPutAll: '<methods value="'; print: (packages sum: [ :each | each methods size ]); nextPutAll: '"/>'; nextPut: Character lf.
-	aStream tab; nextPutAll: '</stats>'; nextPut: Character lf.
+	aStream tab; nextPutAll: '</stats>'; nextPut: Character lf
 ]
 
 { #category : #generating }
 HDCoverageReport >> generateType: aString indent: anInteger total: totalInteger actual: actualInteger on: aStream [
-	aStream tab: anInteger; 
-		nextPutAll: '<coverage type="'; nextPutAll: aString; 
-		nextPutAll: ', %" value="'; print: (totalInteger = 0 ifTrue: [ 0 ] ifFalse: [ (100.0 * actualInteger / totalInteger) rounded ]); 
-		nextPutAll: '% ('; print: actualInteger; nextPut: $/; print: totalInteger; nextPutAll: ')"/>'; 
+	aStream tab: anInteger;
+		nextPutAll: '<coverage type="'; nextPutAll: aString;
+		nextPutAll: ', %" value="'; print: (totalInteger = 0 ifTrue: [ 0 ] ifFalse: [ (100.0 * actualInteger / totalInteger) rounded ]);
+		nextPutAll: '% ('; print: actualInteger; nextPut: $/; print: totalInteger; nextPutAll: ')"/>';
 		nextPut: Character lf
 ]
 
@@ -141,7 +141,7 @@ HDCoverageReport >> ignoredSelectors [
 { #category : #private }
 HDCoverageReport >> methodsIn: aPackage [
 	aPackage ifNil: [ ^ #() ].
-	^ aPackage methods reject: [ :method | 
+	^ aPackage methods reject: [ :method |
 		(self ignoredSelectors includes: method selector)
 			or: [ method compiledMethod isAbstract
 			or: [ method compiledMethod refersToLiteral: #ignoreForCoverage ] ] ]

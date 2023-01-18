@@ -40,23 +40,23 @@ TestCommandLineHandler class >> description [
 TestCommandLineHandler >> activate [
 	self activateHelp
 		ifTrue: [  ^ self ].
-	self runPackages.
+	self runPackages
 ]
 
 { #category : #accessing }
 TestCommandLineHandler >> addPackagesMatching: aString to: aSet [
 	| regex |
-	
-	[ regex := aString asRegex ] 
+
+	[ regex := aString asRegex ]
 		on: Error do: [ ].
 	regex ifNotNil: [ ^ self addPackagesMatchingRegex: regex to: aSet ].
-	
+
 	(aString includes: $*)
 		ifTrue: [ ^ self addPackagesMatchingGlob: aString to: aSet ].
-	
-	"exact match, and just those who actually have classes inside (to avoid 
+
+	"exact match, and just those who actually have classes inside (to avoid
 	 super-package duplications)"
-	((RPackage organizer includesPackageNamed: aString) 
+	((RPackage organizer includesPackageNamed: aString)
 		and: [ (RPackage organizer packageNamed: aString) definedClasses notEmpty ])
 		ifTrue: [ aSet add: aString ]
 ]
@@ -77,14 +77,14 @@ TestCommandLineHandler >> addPackagesMatchingRegex: aRegex to: aSet [
 
 { #category : #private }
 TestCommandLineHandler >> inform: aString [
-	self stdout 
+	self stdout
 		<< aString
 		<< OSPlatform current lineEnding
 ]
 
 { #category : #private }
 TestCommandLineHandler >> informResults: results [
-	self stdout 
+	self stdout
 		<< ('{1} run, {2} passes, {3} failures, {4} errors.'
 			format: {
 				results sum: #suiteTotal.
@@ -99,7 +99,7 @@ TestCommandLineHandler >> informResults: results [
 TestCommandLineHandler >> packages [
 	| packages |
 	packages := Set new.
-	self arguments 
+	self arguments
 		reject: [ :arg| arg beginsWith: '-']
 		thenDo: [ :arg| self addPackagesMatching: arg to: packages ].
 	^ packages
@@ -108,30 +108,30 @@ TestCommandLineHandler >> packages [
 { #category : #private }
 TestCommandLineHandler >> runPackages [
 	| packages results |
-	
+
 	packages := self packages.
 	self inform: 'Running tests in ', packages size asString, ' Packages'.
 	results := (self testRunner runPackages: self packages) select: #notNil.
-				
+
 	self informResults: results.
 	(self hasOption: 'save') ifTrue: [ Smalltalk saveSession ].
-	((self hasOption: 'fail-on-failure') 
+	((self hasOption: 'fail-on-failure')
 		and: [ results anySatisfy: #hasFailuresOrErrors ])
 		ifTrue: [^ self exitFailure: 'Tests do not pass!' ].
-	((self hasOption: 'fail-on-error') 
+	((self hasOption: 'fail-on-error')
 		and: [ results anySatisfy: #hasErrors ])
 		ifTrue: [^ self exitFailure: 'Tests do not pass!' ].
-	
-	Smalltalk snapshot: false andQuit: true.
+
+	Smalltalk snapshot: false andQuit: true
 ]
 
 { #category : #private }
 TestCommandLineHandler >> testRunner [
-	
-	(self hasOption: 'junit-xml-output') ifTrue: [ 
-		HDTestReport currentStageName: ((self hasOption: 'stage-name') ifTrue: [ self optionAt: 'stage-name' ] ifFalse: [ '' ]). 	
+
+	(self hasOption: 'junit-xml-output') ifTrue: [
+		HDTestReport currentStageName: ((self hasOption: 'stage-name') ifTrue: [ self optionAt: 'stage-name' ] ifFalse: [ '' ]).
 		^ HDTestReport ].
-	
+
 	self class environment at: #CommandLineTestRunner ifPresent: [ :commandLineTestRunner |
 		(self hasOption: 'no-xterm') ifTrue: [ ^ commandLineTestRunner ].
 		^ self class environment at: #VTermTestRunner

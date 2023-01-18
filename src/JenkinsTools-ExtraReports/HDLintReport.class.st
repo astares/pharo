@@ -22,8 +22,8 @@ HDLintReport class >> runClasses: aCollectionOfClasses named: aString [
 
 { #category : #running }
 HDLintReport class >> runEnvironment: anEnvironment [
-	^ self new 
-		initializeOn: anEnvironment; 
+	^ self new
+		initializeOn: anEnvironment;
 		run
 ]
 
@@ -45,7 +45,7 @@ HDLintReport >> generateClass: aClass on: aStream [
 	self generateClass: aClass source: sourceStream on: aStream.
 	self generateClass: aClass class source: sourceStream on: aStream.
 	aStream tab; nextPutAll: '</file>'; nextPut: Character lf.
-	sourceName asFileReference ensureDelete writeStreamDo: [ :stream | 
+	sourceName asFileReference ensureDelete writeStreamDo: [ :stream |
 		stream nextPutAll: sourceStream contents ]
 ]
 
@@ -58,7 +58,7 @@ HDLintReport >> generateClass: aClass selector: aSelector source: sourceStream o
 	sourceStream
 		nextPutAll: (source := self convert: (aClass sourceCodeAt: aSelector));
 		nextPut: Character lf; nextPut: Character lf.
-	matching := rules select: [ :each | 
+	matching := rules select: [ :each |
 		(self isSelectorEnvironment: each result)
 			and: [ each result includesSelector: aSelector in: aClass ] ].
 	self generateViolations: matching source: source offset: offset on: aStream
@@ -102,9 +102,9 @@ HDLintReport >> generateViolations: aCollection source: aString offset: aPoint o
 		aStream nextPutAll: ' source="'; nextPutAll: (self encode: rule class name); nextPut: $".
 		aStream nextPutAll: ' message="'; nextPutAll: (self encode: rule group); nextPutAll: ' - '; nextPutAll: (self encode: rule name); nextPut: $".
 		aStream nextPutAll: ' severity="'; nextPutAll: (rule
-			severity = #information 
+			severity = #information
 				ifTrue: [ 'info' ]
-				ifFalse: [ 
+				ifFalse: [
 					rule severity = #warning
 						ifTrue: [ 'warning' ]
 						ifFalse: [ 'error' ] ]); nextPut: $".
@@ -151,10 +151,10 @@ HDLintReport >> rules [
 
 { #category : #running }
 HDLintReport >> run [
-	RBSmalllintChecker 
+	RBSmalllintChecker
 		runRule: (RBCompositeLintRule rules: rules)
 		onEnvironment: environment.
-		
+
 	(environment label , '-Lint.xml') asFileReference ensureDelete writeStreamDo: [ :stream|
 		 self generateOn: stream ]
 ]
