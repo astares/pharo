@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'oldRulesSettings'
 	],
-	#category : #'Renraku-Tests'
+	#category : #'Renraku-Tests-Base'
 }
 
 { #category : #running }

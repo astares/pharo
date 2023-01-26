@@ -1,7 +1,7 @@
 Class {
 	#name : #ReRuleManagerTest,
 	#superclass : #RenrakuBaseTestCase,
-	#category : #'Renraku-Tests'
+	#category : #'Renraku-Tests-Base'
 }
 
 { #category : #tests }

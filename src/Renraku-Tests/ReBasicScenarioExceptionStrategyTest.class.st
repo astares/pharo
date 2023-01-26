@@ -1,7 +1,7 @@
 Class {
 	#name : #ReBasicScenarioExceptionStrategyTest,
 	#superclass : #ReExceptionStrategyBaseTest,
-	#category : #'Renraku-Tests'
+	#category : #'Renraku-Tests-Utilities'
 }
 
 { #category : #tests }

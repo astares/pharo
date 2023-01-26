@@ -1,7 +1,7 @@
 Class {
 	#name : #ReExceptionStrategyTest,
 	#superclass : #TestCase,
-	#category : #'Renraku-Tests'
+	#category : #'Renraku-Tests-Utilities'
 }
 
 { #category : #tests }

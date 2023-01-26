@@ -5,7 +5,7 @@ Class {
 		'testClassName',
 		'testClass'
 	],
-	#category : #'Renraku-Tests'
+	#category : #'Renraku-Tests-Base'
 }
 
 { #category : #running }

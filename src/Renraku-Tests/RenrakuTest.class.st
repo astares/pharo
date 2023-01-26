@@ -1,7 +1,7 @@
 Class {
 	#name : #RenrakuTest,
 	#superclass : #ReCodeBasedTestCase,
-	#category : #'Renraku-Tests'
+	#category : #'Renraku-Tests-Base'
 }
 
 { #category : #tests }
