@@ -5,7 +5,11 @@ Class {
 	#name : #ReMethodSourceCleaner,
 	#superclass : #Object,
 	#instVars : [
-		'sourceLines'
+		'sourceLines',
+		'cleanFinalDot'
+	],
+	#classVars : [
+		'CleanFinalDotInMethodBody'
 	],
 	#category : #'Renraku-Utility'
 }
@@ -22,6 +26,31 @@ ReMethodSourceCleaner class >> clean: aString [
 	^(self forSource: aString)
 		clean;
 		contents
+]
+
+{ #category : #'settings - accessing' }
+ReMethodSourceCleaner class >> cleanFinalDotInMethodBody [
+
+	^ CleanFinalDotInMethodBody ifNil: [ CleanFinalDotInMethodBody := true ]
+]
+
+{ #category : #'settings - accessing' }
+ReMethodSourceCleaner class >> cleanFinalDotInMethodBody: aBoolean [
+
+	CleanFinalDotInMethodBody := aBoolean
+]
+
+{ #category : #settings }
+ReMethodSourceCleaner class >> compactSourceCodeCleanupSettingsOn: aBuilder [
+	<systemsettings>
+
+	(aBuilder setting: #cleanFinalDotInMethodBody)
+		order: 16;
+		label: 'Clean the final dot in method body when critique is autofixed';
+		description: 'Define if the system removes an unnecessary final dot at the end of a method body when critique on it is automatically resolved';
+		parent: #qualityAssistant;
+		default: true;
+		target: self
 ]
 
 { #category : #'instance creation' }
@@ -52,6 +81,18 @@ ReMethodSourceCleaner >> clean [
 ]
 
 { #category : #accessing }
+ReMethodSourceCleaner >> cleanFinalDot [
+
+	^ cleanFinalDot
+]
+
+{ #category : #accessing }
+ReMethodSourceCleaner >> cleanFinalDot: aBoolean [
+
+	cleanFinalDot := aBoolean
+]
+
+{ #category : #accessing }
 ReMethodSourceCleaner >> contents [
 
 	^ String streamContents: [:s |
@@ -69,6 +110,13 @@ ReMethodSourceCleaner >> initFromSource: aString [
 	sourceLines := DoubleLinkedList new
 		               addAll: lines;
 		               yourself
+]
+
+{ #category : #initialization }
+ReMethodSourceCleaner >> initialize [
+
+	super initialize.
+	self cleanFinalDot: self class cleanFinalDotInMethodBody
 ]
 
 { #category : #'private - operating' }
