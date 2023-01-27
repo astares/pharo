@@ -15,34 +15,30 @@ Class {
 }
 
 { #category : #testing }
-ReMethodSourceCleaner class >> ableToClean: aCompiledMethod [
-
-	| aString |
-	aString := aCompiledMethod sourceCode.
-
-	^ ((self forSource: aString)
-		   clean;
-		   contents) size ~= aCompiledMethod sourceCode size
-]
-
-{ #category : #testing }
 ReMethodSourceCleaner class >> ableToClean: aCompiledMethod allowFinalDot: aBoolean [
+	"Return true if the receiver is able to clean the source code of the give method
+	 (which means cleaned source code would have different size)"
 
-	| aString |
-	aString := aCompiledMethod sourceCode.
-
-	^ ((self forSource: aString)
-			cleanFinalDot: aBoolean;
-		   clean;
-		   contents) size ~= aCompiledMethod sourceCode size
+	| source |
+	source := aCompiledMethod sourceCode.
+	^ (self clean: source allowFinalDot: aBoolean) size ~= aCompiledMethod sourceCode size
 ]
 
 { #category : #cleaning }
 ReMethodSourceCleaner class >> clean: aString [
 
-	^(self forSource: aString)
-		clean;
-		contents
+	^ (self forSource: aString)
+		  clean;
+		  contents
+]
+
+{ #category : #cleaning }
+ReMethodSourceCleaner class >> clean: aString allowFinalDot: aBoolean [
+
+	^ (self forSource: aString)
+			cleanFinalDot: aBoolean;
+		   clean;
+		   contents
 ]
 
 { #category : #'settings - accessing' }

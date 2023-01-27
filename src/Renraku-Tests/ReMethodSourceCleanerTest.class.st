@@ -18,6 +18,16 @@ ReMethodSourceCleanerTest >> cleanedMethodString [
 ]
 
 { #category : #'private - test data' }
+ReMethodSourceCleanerTest >> cleanedMethodStringKeepingDot [
+	^'dirtyMethod
+	"Do not format this method - it by intention should include unnecessary spaces and a final dot"
+
+	|temp|
+
+	temp := 3 + 4.'
+]
+
+{ #category : #'private - test data' }
 ReMethodSourceCleanerTest >> dirtyMethod [
 	"Do not format this method - it by intention should include unnecessary spaces and a final dot"  
 	
@@ -30,13 +40,13 @@ ReMethodSourceCleanerTest >> dirtyMethod [
 	
 ]
 
-{ #category : #tests }
+{ #category : #'tests - settings' }
 ReMethodSourceCleanerTest >> testCleanFinalDotIsEnabledByDefault [
 
 	self assert: ReMethodSourceCleaner cleanFinalDotInMethodBody
 ]
 
-{ #category : #tests }
+{ #category : #'tests - cleaning' }
 ReMethodSourceCleanerTest >> testCleaning [
 
 	| cleaned |
@@ -44,7 +54,15 @@ ReMethodSourceCleanerTest >> testCleaning [
 	self assert: cleaned equals: self cleanedMethodString
 ]
 
-{ #category : #tests }
+{ #category : #'tests - cleaning' }
+ReMethodSourceCleanerTest >> testCleaningKeepingDot [
+
+	| cleaned |
+	cleaned := ReMethodSourceCleaner clean: (self class>>#dirtyMethod) sourceCode.
+	self assert: cleaned equals: self cleanedMethodStringKeepingDot
+]
+
+{ #category : #'tests - settings' }
 ReMethodSourceCleanerTest >> testFollowsSettingForCleaningFinalDotUponInstantiation [
 
 	self
