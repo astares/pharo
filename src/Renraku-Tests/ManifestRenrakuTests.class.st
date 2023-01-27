@@ -11,3 +11,8 @@ Class {
 ManifestRenrakuTests class >> ruleReCompactSourceCodeRuleV1FalsePositive [
 	^ #(#(#(#RGClassDefinition #(#ReMethodSourceCleanerTest)) #'2023-01-26T18:27:46.601134+01:00') )
 ]
+
+{ #category : #'code-critics' }
+ManifestRenrakuTests class >> ruleRefersToClassRuleV1FalsePositive [
+	^ #(#(#(#RGClassDefinition #(#ReMethodSourceCleanerTest)) #'2023-01-27T08:17:56.199057+01:00') )
+]

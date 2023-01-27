@@ -40,17 +40,11 @@ ReMethodSourceCleanerTest >> dirtyMethod [
 	
 ]
 
-{ #category : #'tests - settings' }
-ReMethodSourceCleanerTest >> testCleanFinalDotIsEnabledByDefault [
-
-	self assert: ReMethodSourceCleaner cleanFinalDotInMethodBody
-]
-
 { #category : #'tests - cleaning' }
 ReMethodSourceCleanerTest >> testCleaning [
 
 	| cleaned |
-	cleaned := ReMethodSourceCleaner clean: (self class>>#dirtyMethod) sourceCode.
+	cleaned := ReMethodSourceCleaner clean: (ReMethodSourceCleanerTest>>#dirtyMethod) sourceCode.
 	self assert: cleaned equals: self cleanedMethodString
 ]
 
@@ -58,7 +52,7 @@ ReMethodSourceCleanerTest >> testCleaning [
 ReMethodSourceCleanerTest >> testCleaningKeepingDot [
 
 	| cleaned |
-	cleaned := ReMethodSourceCleaner clean: (self class>>#dirtyMethod) sourceCode.
+	cleaned := ReMethodSourceCleaner clean: (ReMethodSourceCleanerTest>>#dirtyMethod) sourceCode keepFinalDot: true.
 	self assert: cleaned equals: self cleanedMethodStringKeepingDot
 ]
 
@@ -66,6 +60,13 @@ ReMethodSourceCleanerTest >> testCleaningKeepingDot [
 ReMethodSourceCleanerTest >> testFollowsSettingForCleaningFinalDotUponInstantiation [
 
 	self
-		assert: ReMethodSourceCleaner new cleanFinalDot
-		equals: ReMethodSourceCleaner cleanFinalDotInMethodBody
+		assert: ReMethodSourceCleaner new keepFinalDot
+		equals: ReMethodSourceCleaner keepFinalDotInMethodBody
+]
+
+{ #category : #'tests - settings' }
+ReMethodSourceCleanerTest >> testKeepFinalDotIsDisabledByDefault [
+
+	self assert: ReMethodSourceCleaner keepFinalDotInMethodBody equals: false
+ 	
 ]
