@@ -52,7 +52,9 @@ ReCompactSourceCodeRule class >> initialize [
 { #category : #running }
 ReCompactSourceCodeRule >> basicCheck: aMethod [
 
-	^ ReMethodSourceCleaner ableToClean: aMethod
+	^ ReMethodSourceCleaner ableToClean: aMethod allowFinalDot: self class criticizeFinalDotInMethodBody
+	
+
 ]
 
 { #category : #running }

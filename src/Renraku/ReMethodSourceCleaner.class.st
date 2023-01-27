@@ -17,7 +17,24 @@ Class {
 { #category : #testing }
 ReMethodSourceCleaner class >> ableToClean: aCompiledMethod [
 
-	^ (self clean: aCompiledMethod sourceCode) size ~= aCompiledMethod sourceCode size
+	| aString |
+	aString := aCompiledMethod sourceCode.
+
+	^ ((self forSource: aString)
+		   clean;
+		   contents) size ~= aCompiledMethod sourceCode size
+]
+
+{ #category : #testing }
+ReMethodSourceCleaner class >> ableToClean: aCompiledMethod allowFinalDot: aBoolean [
+
+	| aString |
+	aString := aCompiledMethod sourceCode.
+
+	^ ((self forSource: aString)
+			cleanFinalDot: aBoolean;
+		   clean;
+		   contents) size ~= aCompiledMethod sourceCode size
 ]
 
 { #category : #cleaning }
@@ -122,7 +139,8 @@ ReMethodSourceCleaner >> initialize [
 { #category : #'private - operating' }
 ReMethodSourceCleaner >> removeTrailingDot [
 
-	 sourceLines last removeTrailingDot
+	self cleanFinalDot ifFalse: [ ^ self ].
+	sourceLines last removeTrailingDot
 ]
 
 { #category : #'private - operating' }
