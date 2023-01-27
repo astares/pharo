@@ -9,7 +9,7 @@ Class {
 
 { #category : #'private - test data' }
 ReMethodSourceCleanerTest >> cleanedMethodString [
-	^'dirtyMethod
+	^'dirtyMethodWithUnnecessarySpacesAndFinalDot
 	"Do not format this method - it by intention should include unnecessary spaces and a final dot"
 
 	|temp|
@@ -19,7 +19,7 @@ ReMethodSourceCleanerTest >> cleanedMethodString [
 
 { #category : #'private - test data' }
 ReMethodSourceCleanerTest >> cleanedMethodStringKeepingDot [
-	^'dirtyMethod
+	^'dirtyMethodWithUnnecessarySpacesAndFinalDot
 	"Do not format this method - it by intention should include unnecessary spaces and a final dot"
 
 	|temp|
@@ -28,7 +28,7 @@ ReMethodSourceCleanerTest >> cleanedMethodStringKeepingDot [
 ]
 
 { #category : #'private - test data' }
-ReMethodSourceCleanerTest >> dirtyMethod [
+ReMethodSourceCleanerTest >> dirtyMethodWithUnnecessarySpacesAndFinalDot [
 	"Do not format this method - it by intention should include unnecessary spaces and a final dot"  
 	
 	|temp| 
@@ -43,8 +43,9 @@ ReMethodSourceCleanerTest >> dirtyMethod [
 { #category : #'tests - cleaning' }
 ReMethodSourceCleanerTest >> testCleaning [
 
-	| cleaned |
-	cleaned := ReMethodSourceCleaner clean: (ReMethodSourceCleanerTest>>#dirtyMethod) sourceCode.
+	| cleaned method |
+	method := ReMethodSourceCleanerTest >> #dirtyMethodWithUnnecessarySpacesAndFinalDot.
+	cleaned := ReMethodSourceCleaner clean: method sourceCode.
 	self assert: cleaned equals: self cleanedMethodString
 ]
 
@@ -52,7 +53,7 @@ ReMethodSourceCleanerTest >> testCleaning [
 ReMethodSourceCleanerTest >> testCleaningKeepingDot [
 
 	| cleaned |
-	cleaned := ReMethodSourceCleaner clean: (ReMethodSourceCleanerTest>>#dirtyMethod) sourceCode keepFinalDot: true.
+	cleaned := ReMethodSourceCleaner clean: (ReMethodSourceCleanerTest>>#dirtyMethodWithUnnecessarySpacesAndFinalDot) sourceCode keepFinalDot: true.
 	self assert: cleaned equals: self cleanedMethodStringKeepingDot
 ]
 
