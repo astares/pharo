@@ -14,16 +14,6 @@ Class {
 	#category : #'Renraku-Utility'
 }
 
-{ #category : #testing }
-ReMethodSourceCleaner class >> ableToClean: aCompiledMethod allowFinalDot: aBoolean [
-	"Return true if the receiver is able to clean the source code of the give method
-	 (which means cleaned source code would have different size)"
-
-	| source |
-	source := aCompiledMethod sourceCode.
-	^ (self clean: source keepFinalDot: aBoolean) size ~= aCompiledMethod sourceCode size
-]
-
 { #category : #cleaning }
 ReMethodSourceCleaner class >> clean: aString [
 
@@ -69,6 +59,16 @@ ReMethodSourceCleaner class >> forSource: aString [
 	^ self new
 		initFromSource: aString;
 		yourself
+]
+
+{ #category : #testing }
+ReMethodSourceCleaner class >> isNecessaryToClean: aCompiledMethod allowFinalDot: aBoolean [
+	"Return true if the receiver finds out that it is necessary to clean the source code of the
+	 given method (which means cleaned source code would have different size than original method)"
+
+	| source |
+	source := aCompiledMethod sourceCode.
+	^ (self clean: source keepFinalDot: aBoolean) size ~= aCompiledMethod sourceCode size
 ]
 
 { #category : #'settings - accessing' }

@@ -8,23 +8,23 @@ Class {
 }
 
 { #category : #'private - test data' }
-ReMethodSourceCleanerTest >> cleanedMethodString [
-	^'dirtyMethodWithUnnecessarySpacesAndFinalDot
-	"Do not format this method - it by intention should include unnecessary spaces and a final dot"
-
-	|temp|
-
-	temp := 3 + 4'
-]
-
-{ #category : #'private - test data' }
-ReMethodSourceCleanerTest >> cleanedMethodStringKeepingDot [
+ReMethodSourceCleanerTest >> aleadyCleanedMethodStringKeepingDot [
 	^'dirtyMethodWithUnnecessarySpacesAndFinalDot
 	"Do not format this method - it by intention should include unnecessary spaces and a final dot"
 
 	|temp|
 
 	temp := 3 + 4.'
+]
+
+{ #category : #'private - test data' }
+ReMethodSourceCleanerTest >> alreadyCleanedMethodString [
+	^'dirtyMethodWithUnnecessarySpacesAndFinalDot
+	"Do not format this method - it by intention should include unnecessary spaces and a final dot"
+
+	|temp|
+
+	temp := 3 + 4'
 ]
 
 { #category : #'private - test data' }
@@ -40,21 +40,48 @@ ReMethodSourceCleanerTest >> dirtyMethodWithUnnecessarySpacesAndFinalDot [
 	
 ]
 
+{ #category : #'private - test data' }
+ReMethodSourceCleanerTest >> properMethodWithFinalDot [
+	"This is a method without any unnecessary separators in the method body but a final dot"
+
+	^ 3 + 4.
+]
+
+{ #category : #'private - test data' }
+ReMethodSourceCleanerTest >> properMethodWithoutFinalDot [
+	"This is a method without any unnecessary separators in the method body and without a final dot"
+
+	^ 3 + 4
+]
+
 { #category : #'tests - cleaning' }
 ReMethodSourceCleanerTest >> testCleaning [
 
 	| cleaned method |
 	method := ReMethodSourceCleanerTest >> #dirtyMethodWithUnnecessarySpacesAndFinalDot.
 	cleaned := ReMethodSourceCleaner clean: method sourceCode.
-	self assert: cleaned equals: self cleanedMethodString
+	
+	self assert: cleaned equals: self alreadyCleanedMethodString
 ]
 
 { #category : #'tests - cleaning' }
 ReMethodSourceCleanerTest >> testCleaningKeepingDot [
 
-	| cleaned |
-	cleaned := ReMethodSourceCleaner clean: (ReMethodSourceCleanerTest>>#dirtyMethodWithUnnecessarySpacesAndFinalDot) sourceCode keepFinalDot: true.
-	self assert: cleaned equals: self cleanedMethodStringKeepingDot
+	| cleaned method |
+	method := ReMethodSourceCleanerTest >> #dirtyMethodWithUnnecessarySpacesAndFinalDot.
+	cleaned := ReMethodSourceCleaner
+		           clean: method sourceCode
+		           keepFinalDot: true.
+	self assert: cleaned equals: self aleadyCleanedMethodStringKeepingDot
+]
+
+{ #category : #'tests - cleaning' }
+ReMethodSourceCleanerTest >> testCleaningNotKeepingDot [
+
+	| cleaned method |
+	method := ReMethodSourceCleanerTest >> #dirtyMethodWithUnnecessarySpacesAndFinalDot.
+	cleaned := ReMethodSourceCleaner clean: method sourceCode keepFinalDot: false.
+	self assert: cleaned equals: self alreadyCleanedMethodString
 ]
 
 { #category : #'tests - settings' }
@@ -63,6 +90,45 @@ ReMethodSourceCleanerTest >> testFollowsSettingForCleaningFinalDotUponInstantiat
 	self
 		assert: ReMethodSourceCleaner new keepFinalDot
 		equals: ReMethodSourceCleaner keepFinalDotInMethodBody
+]
+
+{ #category : #tests }
+ReMethodSourceCleanerTest >> testIsNecessaryToCleanProperMethodWithFinalDot [
+
+	| method |
+	method := ReMethodSourceCleanerTest >> #properMethodWithFinalDot.
+
+	self assert: (ReMethodSourceCleaner isNecessaryToClean: method allowFinalDot: false)
+]
+
+{ #category : #'tests - cleaning' }
+ReMethodSourceCleanerTest >> testIsNotNecessaryToCleanAnAlreadyCleanMethod [
+
+	| method |
+	method := ReMethodSourceCleanerTest >> #alreadyCleanedMethodString.
+
+	self deny:
+		(ReMethodSourceCleaner
+			 isNecessaryToClean: method
+			 allowFinalDot: false)
+]
+
+{ #category : #tests }
+ReMethodSourceCleanerTest >> testIsNotNecessaryToCleanProperMethodWithFinalDot [
+
+	| method |
+	method := ReMethodSourceCleanerTest >> #properMethodWithFinalDot.
+
+	self deny: (ReMethodSourceCleaner isNecessaryToClean: method allowFinalDot: true)
+]
+
+{ #category : #tests }
+ReMethodSourceCleanerTest >> testIsNotNecessaryToCleanProperMethodWithoutFinalDot [
+
+	| method |
+	method := ReMethodSourceCleanerTest >> #properMethodWithoutFinalDot.
+	
+	self deny: (ReMethodSourceCleaner isNecessaryToClean: method allowFinalDot: false)
 ]
 
 { #category : #'tests - settings' }
